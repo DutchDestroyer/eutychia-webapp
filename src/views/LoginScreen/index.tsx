@@ -1,5 +1,8 @@
 import { useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
+import { api } from '../../App';
+import { LoginAccount, LoginAccountGrantTypeEnum } from '../../api';
+import { AxiosResponse } from 'axios';
 
 interface IState{
   emailaddress: string,
@@ -10,11 +13,29 @@ function LoginScreen(): JSX.Element{
   const {register, handleSubmit, errors, reset} = useForm<IState>();
   const history = useHistory();
 
+
   const onSubmit = (data: IState) => {
-    console.log("data", data);
+
+    let loginAccount: LoginAccount = {
+      grantType: LoginAccountGrantTypeEnum.Password,
+      emailAddress: data.emailaddress,
+      password: data.password
+    };
+
     reset();
-    history.push("/Overview");
-  };
+
+    (async () => {
+      const incomingdata: AxiosResponse = await api.logInWithAccount(loginAccount)
+      .then(res => res)
+      .catch(e => e);
+
+      if(incomingdata.status === 200){
+        history.push("/Overview");
+      }
+    })();
+    
+}
+  
 
 
   return(

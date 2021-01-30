@@ -9,6 +9,8 @@ import ModifyExistingProjectScreen from './views/ModifyExistingProjectScreen';
 import ProjectsOverviewScreen from './views/ProjectsOverviewScreen';
 import ProjectOverviewParticipantScreen from './views/ProjectOverviewParticipantScreen';
 import GenericTestScreen from './views/GenericTestScreen';
+import { Configuration, ConfigurationParameters } from './api/configuration';
+import { DefaultApi } from './api';
 
 function App(){
 
@@ -39,5 +41,15 @@ function App(){
     </Router>
   );
 }
+
+
+let configParams: ConfigurationParameters = {
+  username: "Mark",
+  basePath: "http://localhost:8080/api"
+}
+
+let config = new Configuration(configParams)
+
+export const api: DefaultApi = new DefaultApi(config);
 
 export default App;

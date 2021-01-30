@@ -26,31 +26,4 @@ function OverviewScreen() {
 
 }
 
-
-/*function OverviewScreen() {
-
-    const history = useHistory();
-
-    const addColarobatorClick = () =>{
-        history.push("/AddColaborator");
-    }
-
-    const addResearchParticipantsClick = () =>{
-        history.push("/AddParticipants");
-    }
-
-    const createTestsClick = () =>{
-        history.push("/CreateGenericTest");
-    }
-
-return(
-    <ul>
-        <div><button onClick={addColarobatorClick}>Add collaborators</button></div>
-        <div><button onClick={addResearchParticipantsClick}>Add research participants</button></div>
-        <div><button onClick={createTestsClick}>Create generic test</button></div>
-    </ul>
-)
-
-}*/
-
 export default OverviewScreen;
