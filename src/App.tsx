@@ -9,8 +9,8 @@ import ModifyExistingProjectScreen from './views/ModifyExistingProjectScreen';
 import ProjectsOverviewScreen from './views/ProjectsOverviewScreen';
 import ProjectOverviewParticipantScreen from './views/ProjectOverviewParticipantScreen';
 import GenericTestScreen from './views/GenericTestScreen';
-import { Configuration, ConfigurationParameters } from './api/configuration';
-import { DefaultApi } from './api';
+import { Configuration, ConfigurationParameters } from './services/api/configuration';
+import { DefaultApi } from './services/api';
 
 function App(){
 

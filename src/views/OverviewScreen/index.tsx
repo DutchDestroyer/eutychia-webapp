@@ -1,8 +1,17 @@
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { AppState } from '../../services/redux/store';
+import { LoggedInData } from '../../services/redux/types/login';
 import nl from '../navigationlinks';
 
 function OverviewScreen() {
     const history = useHistory();
+    const loginData: LoggedInData = useSelector((state: AppState) => state.login)
+
+    useEffect(() =>
+        console.log("logged in data:  " + loginData.accountDetails.JWT)
+    )
 
     const createNewProjectClick = () =>{
         history.push(nl.createNewProjectScreen);
