@@ -51,6 +51,31 @@ export interface AccountCreation {
     emailAddress: string;
 }
 /**
+ * the account details provided when the user logs in as a JWT token
+ * @export
+ * @interface AccountDetails
+ */
+export interface AccountDetails {
+    /**
+     * The account id.
+     * @type {string}
+     * @memberof AccountDetails
+     */
+    accountID: string;
+    /**
+     * The access token.
+     * @type {string}
+     * @memberof AccountDetails
+     */
+    accessToken: string;
+    /**
+     * The refresh token.
+     * @type {string}
+     * @memberof AccountDetails
+     */
+    refreshToken: string;
+}
+/**
  * the answer to a question
  * @export
  * @interface AnswerToQuestion
@@ -1095,7 +1120,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async logInWithAccount(loginAccount: LoginAccount, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<JWTAccountDetails>> {
+        async logInWithAccount(loginAccount: LoginAccount, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountDetails>> {
             const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).logInWithAccount(loginAccount, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -1227,7 +1252,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        logInWithAccount(loginAccount: LoginAccount, options?: any): AxiosPromise<JWTAccountDetails> {
+        logInWithAccount(loginAccount: LoginAccount, options?: any): AxiosPromise<AccountDetails> {
             return DefaultApiFp(configuration).logInWithAccount(loginAccount, options).then((request) => request(axios, basePath));
         },
         /**

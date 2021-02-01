@@ -1,9 +1,9 @@
-import { JWTAccountDetails } from "../../api";
+import { AccountDetails } from "../../api";
 
 export const LOGIN = "LOGIN"
 
 export interface LoggedInData{
-    accountDetails: JWTAccountDetails
+    accountDetails: AccountDetails
 }
 
 export interface LoginAction{

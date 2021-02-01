@@ -10,7 +10,7 @@ function OverviewScreen() {
     const loginData: LoggedInData = useSelector((state: AppState) => state.login)
 
     useEffect(() =>
-        console.log("logged in data:  " + loginData.accountDetails.JWT)
+        console.log("logged in data:  " + loginData.accountDetails.accountID)
     )
 
     const createNewProjectClick = () =>{

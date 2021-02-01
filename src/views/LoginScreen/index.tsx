@@ -2,7 +2,7 @@ import { useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { useDispatch } from 'react-redux';
 import { LoggedInData } from '../../services/redux/types/login';
-import { JWTAccountDetails, LoginAccount, LoginAccountGrantTypeEnum } from '../../services/api';
+import { AccountDetails, LoginAccount, LoginAccountGrantTypeEnum } from '../../services/api';
 import { api } from '../../App';
 import { loginAction } from '../../services/redux/actions/login';
 
@@ -11,7 +11,7 @@ interface IState{
   password: string
 }
 
-const transformData = (loginDetails: JWTAccountDetails): LoggedInData => {
+const transformData = (loginDetails: AccountDetails): LoggedInData => {
   const loggedInData: LoggedInData = {
       accountDetails: loginDetails
   };
