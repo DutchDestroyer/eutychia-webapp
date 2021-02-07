@@ -117,6 +117,31 @@ export interface AnswerToQuestion {
     timeToAnswer?: number;
 }
 /**
+ * 
+ * @export
+ * @interface CreateProject
+ */
+export interface CreateProject {
+    /**
+     * title of project
+     * @type {string}
+     * @memberof CreateProject
+     */
+    projectTitle: string;
+    /**
+     * participants of project
+     * @type {Array<Participant>}
+     * @memberof CreateProject
+     */
+    participants: Array<Participant>;
+    /**
+     * tests to perform as part of this project
+     * @type {Array<string>}
+     * @memberof CreateProject
+     */
+    tests: Array<string>;
+}
+/**
  * schema of a generic test
  * @export
  * @interface GenericTest
@@ -301,6 +326,31 @@ export interface LogoutAccount {
     accessToken: string;
 }
 /**
+ * participant of project
+ * @export
+ * @interface Participant
+ */
+export interface Participant {
+    /**
+     * firstname of the participant
+     * @type {string}
+     * @memberof Participant
+     */
+    firstame?: string;
+    /**
+     * lastname of the participant
+     * @type {string}
+     * @memberof Participant
+     */
+    lastname?: string;
+    /**
+     * email address of the participant
+     * @type {string}
+     * @memberof Participant
+     */
+    emailAddress?: string;
+}
+/**
  * a project object
  * @export
  * @interface Project
@@ -407,6 +457,25 @@ export enum TestTestTypeEnum {
 }
 
 /**
+ * 
+ * @export
+ * @interface TestsForAccount
+ */
+export interface TestsForAccount {
+    /**
+     * the id of a test
+     * @type {string}
+     * @memberof TestsForAccount
+     */
+    testID?: string;
+    /**
+     * the name of a test
+     * @type {string}
+     * @memberof TestsForAccount
+     */
+    testName?: string;
+}
+/**
  * tests that the account needs to perform for this specific project
  * @export
  * @interface TestsProject
@@ -486,6 +555,62 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * Creates a new project
+         * @param {string} accountID The ID of the account
+         * @param {CreateProject} createProject 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createsNewProject: async (accountID: string, createProject: CreateProject, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accountID' is not null or undefined
+            if (accountID === null || accountID === undefined) {
+                throw new RequiredError('accountID','Required parameter accountID was null or undefined when calling createsNewProject.');
+            }
+            // verify required parameter 'createProject' is not null or undefined
+            if (createProject === null || createProject === undefined) {
+                throw new RequiredError('createProject','Required parameter createProject was null or undefined when calling createsNewProject.');
+            }
+            const localVarPath = `/accounts/{accountID}/projects`
+                .replace(`{${"accountID"}}`, encodeURIComponent(String(accountID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof createProject !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(createProject !== undefined ? createProject : {})
+                : (createProject || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Delete the account with this ID
          * @param {string} accountID The ID of the account to return (UUID)
          * @param {*} [options] Override http request option.
@@ -548,6 +673,57 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
                 throw new RequiredError('accountID','Required parameter accountID was null or undefined when calling getAccountByID.');
             }
             const localVarPath = `/accounts/{accountID}`
+                .replace(`{${"accountID"}}`, encodeURIComponent(String(accountID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            if (configuration && configuration.accessToken) {
+                const accessToken = typeof configuration.accessToken === 'function'
+                    ? await configuration.accessToken()
+                    : await configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get all tests that are stored in the backend and are accessible for this account
+         * @param {string} accountID The ID of the account to return (UUID)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllTests: async (accountID: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accountID' is not null or undefined
+            if (accountID === null || accountID === undefined) {
+                throw new RequiredError('accountID','Required parameter accountID was null or undefined when calling getAllTests.');
+            }
+            const localVarPath = `/test/{accountID}`
                 .replace(`{${"accountID"}}`, encodeURIComponent(String(accountID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -1064,6 +1240,20 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * Creates a new project
+         * @param {string} accountID The ID of the account
+         * @param {CreateProject} createProject 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createsNewProject(accountID: string, createProject: CreateProject, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).createsNewProject(accountID, createProject, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
          * Delete the account with this ID
          * @param {string} accountID The ID of the account to return (UUID)
          * @param {*} [options] Override http request option.
@@ -1084,6 +1274,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          */
         async getAccountByID(accountID: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetAccountIdResponse>> {
             const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).getAccountByID(accountID, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * Get all tests that are stored in the backend and are accessible for this account
+         * @param {string} accountID The ID of the account to return (UUID)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllTests(accountID: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TestsForAccount>>> {
+            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).getAllTests(accountID, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1216,6 +1419,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return DefaultApiFp(configuration).createNewAccount(accountCreation, options).then((request) => request(axios, basePath));
         },
         /**
+         * Creates a new project
+         * @param {string} accountID The ID of the account
+         * @param {CreateProject} createProject 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createsNewProject(accountID: string, createProject: CreateProject, options?: any): AxiosPromise<void> {
+            return DefaultApiFp(configuration).createsNewProject(accountID, createProject, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Delete the account with this ID
          * @param {string} accountID The ID of the account to return (UUID)
          * @param {*} [options] Override http request option.
@@ -1232,6 +1445,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         getAccountByID(accountID: string, options?: any): AxiosPromise<GetAccountIdResponse> {
             return DefaultApiFp(configuration).getAccountByID(accountID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get all tests that are stored in the backend and are accessible for this account
+         * @param {string} accountID The ID of the account to return (UUID)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllTests(accountID: string, options?: any): AxiosPromise<Array<TestsForAccount>> {
+            return DefaultApiFp(configuration).getAllTests(accountID, options).then((request) => request(axios, basePath));
         },
         /**
          * Get a generic test with specific ID
@@ -1331,6 +1553,18 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
+     * Creates a new project
+     * @param {string} accountID The ID of the account
+     * @param {CreateProject} createProject 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public createsNewProject(accountID: string, createProject: CreateProject, options?: any) {
+        return DefaultApiFp(this.configuration).createsNewProject(accountID, createProject, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Delete the account with this ID
      * @param {string} accountID The ID of the account to return (UUID)
      * @param {*} [options] Override http request option.
@@ -1350,6 +1584,17 @@ export class DefaultApi extends BaseAPI {
      */
     public getAccountByID(accountID: string, options?: any) {
         return DefaultApiFp(this.configuration).getAccountByID(accountID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get all tests that are stored in the backend and are accessible for this account
+     * @param {string} accountID The ID of the account to return (UUID)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getAllTests(accountID: string, options?: any) {
+        return DefaultApiFp(this.configuration).getAllTests(accountID, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

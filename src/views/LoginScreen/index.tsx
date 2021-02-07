@@ -35,14 +35,21 @@ export default function LoginScreen(): JSX.Element{
       };
 
       const loggedInData = await api.logInWithAccount(loginAccount)
+        .catch(e => {
+          console.log(e)
+          return e
+        })
+
+      if(loggedInData.status !== 200){
+        reset();
+        return;
+      }
+
       dispatch(
         loginAction(transformData(loggedInData.data, loggedInData.status))
       );
 
-      if(loggedInData.status === 200){
-        history.push(nl.overviewScreen);
-      }
-      
+      history.push(nl.overviewScreen);      
       reset();
     })();
     

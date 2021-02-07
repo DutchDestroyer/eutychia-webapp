@@ -1,14 +1,34 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { AccountDetailsAccountTypeEnum } from '../../services/api';
+import { api } from '../../App';
+import { AccountDetailsAccountTypeEnum, TestsForAccount } from '../../services/api';
+import { getTestsAction } from '../../services/redux/actions/getTests';
 import { AppState } from '../../services/redux/store';
+import { AllTests } from '../../services/redux/types/getTests';
 import nl from '../navigationlinks';
 
 export default function OverviewScreen() {
     const history = useHistory();
     const loginData = useSelector((state: AppState) => state.login)
+    const dispatch = useDispatch()
 
     const createNewProjectClick = () =>{
+        (async () => {
+
+            const allTests = await api.getAllTests(loginData.accountDetails.accountID)
+            .catch(e => {
+                console.log(e)
+                return e
+              })
+
+            if(allTests.status !== 200){
+                return;
+            }
+            dispatch(
+              getTestsAction(TransformData(allTests.data))
+            );
+        })();
+
         history.push(nl.createNewProjectScreen);
     }
 
@@ -40,5 +60,18 @@ export default function OverviewScreen() {
                 <div><button onClick={performTestsClick}>Perform tests</button></div>
             </ul>
         );
+    }
+}
+
+function TransformData(tests:  []| undefined): AllTests {
+    if(tests === undefined){
+        const allTests : AllTests = {
+            tests: [],
+        }
+        return allTests
+    } else {
+        return {
+            tests,
+        }
     }
 }
