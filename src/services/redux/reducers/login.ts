@@ -1,8 +1,12 @@
+import { AccountDetailsAccountTypeEnum } from "../../api";
 import { LoggedInData, LOGIN, LoginAction } from "../types/login";
 
 const initialState: LoggedInData = {
     accountDetails: {
-        JWT: ""
+        accountID: "",
+        refreshToken: "",
+        accessToken: "",
+        accountType: AccountDetailsAccountTypeEnum.Participant
     }
 } 
 

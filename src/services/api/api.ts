@@ -74,7 +74,23 @@ export interface AccountDetails {
      * @memberof AccountDetails
      */
     refreshToken: string;
+    /**
+     * type of account
+     * @type {string}
+     * @memberof AccountDetails
+     */
+    accountType: AccountDetailsAccountTypeEnum;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum AccountDetailsAccountTypeEnum {
+    Researcher = 'researcher',
+    Participant = 'participant'
+}
+
 /**
  * the answer to a question
  * @export
