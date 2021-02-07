@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import nl from '../navigationlinks';
 
-function ProjectsOverviewScreen(){
+export default function ProjectsOverviewScreen(){
 
     const history = useHistory();
 
@@ -19,5 +19,3 @@ function ProjectsOverviewScreen(){
 
 
 }
-
-export default ProjectsOverviewScreen

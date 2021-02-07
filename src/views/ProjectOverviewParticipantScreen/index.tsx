@@ -5,7 +5,7 @@ interface ParamTypes {
     projectUuid: string
   }
 
-function ProjectOverviewParticipantScreen(){    
+export default function ProjectOverviewParticipantScreen(){    
     const history = useHistory();
     const { projectUuid } = useParams<ParamTypes>();
     const goToTestClick = (testUUID: string) =>{
@@ -20,5 +20,3 @@ function ProjectOverviewParticipantScreen(){
         </ul>
     );
 }
-
-export default ProjectOverviewParticipantScreen

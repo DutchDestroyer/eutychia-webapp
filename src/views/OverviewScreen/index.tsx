@@ -4,7 +4,7 @@ import { AccountDetailsAccountTypeEnum } from '../../services/api';
 import { AppState } from '../../services/redux/store';
 import nl from '../navigationlinks';
 
-function OverviewScreen() {
+export default function OverviewScreen() {
     const history = useHistory();
     const loginData = useSelector((state: AppState) => state.login)
 
@@ -18,6 +18,12 @@ function OverviewScreen() {
 
     const performTestsClick = () =>{
         history.push(nl.projectsOverviewScreen);
+    }
+
+    if(!loginData.isValid) {
+        return (
+            <h1>Unauthorized</h1>
+        );
     }
 
     if(loginData.accountDetails.accountType === AccountDetailsAccountTypeEnum.Researcher){
@@ -36,5 +42,3 @@ function OverviewScreen() {
         );
     }
 }
-
-export default OverviewScreen;

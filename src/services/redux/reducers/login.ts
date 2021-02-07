@@ -7,14 +7,16 @@ const initialState: LoggedInData = {
         refreshToken: "",
         accessToken: "",
         accountType: AccountDetailsAccountTypeEnum.Participant
-    }
+    },
+    isValid: false
 } 
 
 export default function loginReducer(state = initialState, action: LoginAction): LoggedInData{
     switch(action.type) {
         case LOGIN:
             return {
-                accountDetails: action.payload.accountDetails
+                accountDetails: action.payload.accountDetails,
+                isValid: action.payload.isValid
             };
             default:
                 return state;
