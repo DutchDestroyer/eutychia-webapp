@@ -5,10 +5,9 @@ import { AccountDetailsAccountTypeEnum, ProjectsAccountId, TestsForAccount } fro
 import { getTestsAction } from '../../services/redux/actions/getTests';
 import { getProjectsOfParticipantAction } from '../../services/redux/actions/getProjectsOfParticipant';
 import { AppState } from '../../services/redux/store';
-import { AllTests, TestForAccount } from '../../services/redux/types/getTests';
 import nl from '../navigationlinks';
-import { TransformResearcherTestsData } from '../../services/viewmodels/AllTestsFoResearcher';
-import { TransformParticipantProjectData } from '../../services/viewmodels/AllProjectsForParticipant';
+import { TransformParticipantProjectData } from '../../services/viewmodels/allProjectsForParticipant';
+import { TransformResearcherTestsData } from '../../services/viewmodels/allTestsForResearcher';
 
 export default function OverviewScreen() {
     const history = useHistory();

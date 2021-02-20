@@ -1,11 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { api } from '../../App';
+import { TestsProject } from '../../services/api';
+import { getTestsOfProjectOfParticipantAction } from '../../services/redux/actions/getTestsOfProjectParticipant';
 import { AppState } from '../../services/redux/store';
+import { TransformTestsOfParticipantData } from '../../services/viewmodels/allTestsOfProjectParticipant';
 import nl from '../navigationlinks';
 
 export default function ProjectsOverviewScreen(){
-
+    const dispatch = useDispatch();
     const history = useHistory();
     const loginData = useSelector((state: AppState) => state.login)
     const projectsOfParticipant = useSelector((state: AppState) => state.getProjectsOfParticipant)
@@ -22,6 +25,10 @@ export default function ProjectsOverviewScreen(){
             if(testsOfProject.status != 200){
                 return;
             }
+
+            dispatch(
+                getTestsOfProjectOfParticipantAction(TransformTestsOfParticipantData(testsOfProject.data as TestsProject))
+            );
             
             history.push(nl.projectOverviewParticipantScreen + "/" + projectUUID);
         })();

@@ -4,11 +4,13 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import loginReducer from "./reducers/login";
 import getTestsReducer from "./reducers/getTests";
 import getProjectsOfParticipantReducer from "./reducers/getProjectsOfParticipant";
+import getTestsOfProjectOfParticipantReducer from "./reducers/getTestsOfProjectParticipant";
 
 const rootReducer = combineReducers({
     login: loginReducer,
     getTests: getTestsReducer,
-    getProjectsOfParticipant: getProjectsOfParticipantReducer
+    getProjectsOfParticipant: getProjectsOfParticipantReducer,
+    testsOfProjectOfParticipant: getTestsOfProjectOfParticipantReducer
   });
 
 export type AppState = ReturnType<typeof rootReducer>;
