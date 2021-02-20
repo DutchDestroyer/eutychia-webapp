@@ -4,7 +4,7 @@ import { api } from '../../App';
 import { AccountDetailsAccountTypeEnum, TestsForAccount } from '../../services/api';
 import { getTestsAction } from '../../services/redux/actions/getTests';
 import { AppState } from '../../services/redux/store';
-import { AllTests } from '../../services/redux/types/getTests';
+import { AllTests, TestForAccount } from '../../services/redux/types/getTests';
 import nl from '../navigationlinks';
 
 export default function OverviewScreen() {
@@ -25,11 +25,11 @@ export default function OverviewScreen() {
                 return;
             }
             dispatch(
-              getTestsAction(TransformData(allTests.data))
+              getTestsAction(TransformData(allTests.data as TestsForAccount[]))
             );
-        })();
 
-        history.push(nl.createNewProjectScreen);
+            history.push(nl.createNewProjectScreen);
+        })();
     }
 
     const modifyExistingProjectClick = () =>{
@@ -63,15 +63,13 @@ export default function OverviewScreen() {
     }
 }
 
-function TransformData(tests:  []| undefined): AllTests {
-    if(tests === undefined){
-        const allTests : AllTests = {
-            tests: [],
-        }
-        return allTests
-    } else {
-        return {
-            tests,
-        }
-    }
+function TransformData(tests:  TestsForAccount[]): AllTests {
+    let a: TestForAccount[] = tests.map(t => (
+        {
+            testName: t.testName!, 
+            testId: t.testID!, 
+            isChecked: false
+        }))
+
+    return {backendSavedTests: a}
 }

@@ -1,9 +1,14 @@
-import { TestsForAccount } from "../../api";
 
 export const GETTESTS = "GETTESTS"
 
+export interface TestForAccount{
+    testName: string,
+    testId: string,
+    isChecked: boolean
+}
+
 export interface AllTests{
-    tests: TestsForAccount[],
+    backendSavedTests: TestForAccount[],
 }
 
 export interface GetTestsAction{

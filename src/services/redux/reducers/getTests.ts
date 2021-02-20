@@ -1,7 +1,7 @@
 import { AllTests, GETTESTS, GetTestsAction } from "../types/getTests";
 
 const initialState: AllTests = {
-   tests: [],
+   backendSavedTests: [],
 } 
 
 export default function getTestsReducer(state = initialState, action: GetTestsAction): AllTests{
