@@ -6,19 +6,14 @@ import { AccountDetails, LoginAccount, LoginAccountGrantTypeEnum } from '../../s
 import { api } from '../../App';
 import { loginAction } from '../../services/redux/actions/login';
 import nl from '../navigationlinks';
+import { transformLoginData } from '../../services/viewmodels/loginData';
 
 interface IState{
   emailaddress: string,
   password: string
 }
 
-const transformData = (loginDetails: AccountDetails, status: number): LoggedInData => {
-  const loggedInData: LoggedInData = {
-      accountDetails: loginDetails,
-      isValid: status === 200
-  };
-  return loggedInData;
-}
+
 
 export default function LoginScreen(): JSX.Element{
   const {register, handleSubmit, errors, reset} = useForm<IState>();
@@ -46,7 +41,7 @@ export default function LoginScreen(): JSX.Element{
       }
 
       dispatch(
-        loginAction(transformData(loggedInData.data, loggedInData.status))
+        loginAction(transformLoginData(loggedInData.data, loggedInData.status))
       );
 
       history.push(nl.overviewScreen);      
