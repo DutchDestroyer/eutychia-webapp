@@ -1,11 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { api } from '../../App';
-import { AccountDetailsAccountTypeEnum, TestsForAccount } from '../../services/api';
+import { AccountDetailsAccountTypeEnum, ProjectsAccountId, TestsForAccount } from '../../services/api';
 import { getTestsAction } from '../../services/redux/actions/getTests';
+import { getProjectsOfParticipantAction } from '../../services/redux/actions/getProjectsOfParticipant';
 import { AppState } from '../../services/redux/store';
 import { AllTests, TestForAccount } from '../../services/redux/types/getTests';
 import nl from '../navigationlinks';
+import { TransformResearcherTestsData } from '../../services/viewmodels/AllTestsFoResearcher';
+import { TransformParticipantProjectData } from '../../services/viewmodels/AllProjectsForParticipant';
 
 export default function OverviewScreen() {
     const history = useHistory();
@@ -25,7 +28,7 @@ export default function OverviewScreen() {
                 return;
             }
             dispatch(
-              getTestsAction(TransformData(allTests.data as TestsForAccount[]))
+              getTestsAction(TransformResearcherTestsData(allTests.data as TestsForAccount[]))
             );
 
             history.push(nl.createNewProjectScreen);
@@ -37,7 +40,23 @@ export default function OverviewScreen() {
     }
 
     const performTestsClick = () =>{
-        history.push(nl.projectsOverviewScreen);
+        (async() => {
+            const projectsOfParticipant = await api.getProjectsOfAccount(loginData.accountDetails.accountID)
+            .catch(e => {
+                console.log(e)
+                return e
+              })
+
+            if(projectsOfParticipant.status !== 200){
+                return;
+            }
+
+            dispatch(
+                getProjectsOfParticipantAction(TransformParticipantProjectData(projectsOfParticipant.data as ProjectsAccountId))
+            );
+
+            history.push(nl.projectsOverviewScreen);
+        })();
     }
 
     if(!loginData.isValid) {
@@ -61,15 +80,4 @@ export default function OverviewScreen() {
             </ul>
         );
     }
-}
-
-function TransformData(tests:  TestsForAccount[]): AllTests {
-    let a: TestForAccount[] = tests.map(t => (
-        {
-            testName: t.testName!, 
-            testId: t.testID!, 
-            isChecked: false
-        }))
-
-    return {backendSavedTests: a}
 }

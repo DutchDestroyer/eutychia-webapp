@@ -3,10 +3,12 @@ import thunkMiddleware from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import loginReducer from "./reducers/login";
 import getTestsReducer from "./reducers/getTests";
+import getProjectsOfParticipantReducer from "./reducers/getProjectsOfParticipant";
 
 const rootReducer = combineReducers({
     login: loginReducer,
-    getTests: getTestsReducer
+    getTests: getTestsReducer,
+    getProjectsOfParticipant: getProjectsOfParticipantReducer
   });
 
 export type AppState = ReturnType<typeof rootReducer>;

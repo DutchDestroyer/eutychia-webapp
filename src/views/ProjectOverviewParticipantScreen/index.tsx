@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import nl from '../navigationlinks';
 

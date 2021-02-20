@@ -6,7 +6,7 @@ import LoginScreen from './views/LoginScreen/index';
 import OverviewScreen from './views/OverviewScreen';
 import CreateNewProjectScreen from './views/CreateNewProjectScreen';
 import ModifyExistingProjectScreen from './views/ModifyExistingProjectScreen';
-import ProjectsOverviewScreen from './views/ProjectsOverviewScreen';
+import ProjectsOverviewScreen from './views/ProjectsOverviewParticipantScreen';
 import ProjectOverviewParticipantScreen from './views/ProjectOverviewParticipantScreen';
 import GenericTestScreen from './views/GenericTestScreen';
 import { Configuration, ConfigurationParameters } from './services/api/configuration';
