@@ -7,14 +7,14 @@ export enum ETestType {
     StroopColor = 'stroopColor'
 }
 
-export interface GetTestsOfProjectOfParticipant{
+export interface TestOfProjectOfParticipant{
     testName: string,
     testId: string,
     testType: ETestType
 }
 
 export interface AllTestsOfProjectOfParticipant{
-    tests: GetTestsOfProjectOfParticipant[],
+    tests: TestOfProjectOfParticipant[],
 }
 
 export interface GetTestsOfProjectOfParticipantAction{

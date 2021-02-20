@@ -5,12 +5,14 @@ import loginReducer from "./reducers/login";
 import getTestsReducer from "./reducers/getTests";
 import getProjectsOfParticipantReducer from "./reducers/getProjectsOfParticipant";
 import getTestsOfProjectOfParticipantReducer from "./reducers/getTestsOfProjectParticipant";
+import testToPerformReducer from "./reducers/dataForTestToPerform";
 
 const rootReducer = combineReducers({
     login: loginReducer,
     getTests: getTestsReducer,
     getProjectsOfParticipant: getProjectsOfParticipantReducer,
-    testsOfProjectOfParticipant: getTestsOfProjectOfParticipantReducer
+    testsOfProjectOfParticipant: getTestsOfProjectOfParticipantReducer,
+    testToPerform: testToPerformReducer
   });
 
 export type AppState = ReturnType<typeof rootReducer>;
