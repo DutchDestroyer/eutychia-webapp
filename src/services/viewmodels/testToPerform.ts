@@ -1,5 +1,5 @@
 import { GenericTest, GenericTestQuestionsQuestionTypeEnum } from "../api";
-import { QuestionsOfTest, QuestionTypeEnum, TestToPerform } from "../redux/types/dataForTestToPerform";
+import { QuestionOfTest, QuestionTypeEnum, TestToPerform } from "../redux/types/dataForTestToPerform";
 
 export function TransformTestToPerformData(genericTest: GenericTest): TestToPerform {
     return {
@@ -8,10 +8,11 @@ export function TransformTestToPerformData(genericTest: GenericTest): TestToPerf
         displayAnswers: genericTest.displayAnswers,
         finalRemark: genericTest.finalRemark,
         questions: genericTest.questions.map(q => {
-            return<QuestionsOfTest>{
+            return<QuestionOfTest>{
                 question: q.question!,
                 questionType: transformEnum(q.questionType!),
-                answers: q.answers!
+                answers: q.answers!,
+                selectedAnswer: ""
             }
         })
     }

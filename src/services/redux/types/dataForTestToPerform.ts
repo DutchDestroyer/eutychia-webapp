@@ -5,13 +5,14 @@ export interface TestToPerform{
     description: string,
     displayAnswers: boolean,
     finalRemark: string,
-    questions: QuestionsOfTest[]
+    questions: QuestionOfTest[]
 }
 
-export interface QuestionsOfTest{
+export interface QuestionOfTest{
     question: string,
     questionType: QuestionTypeEnum,
-    answers: string[];
+    answers: string[],
+    selectedAnswer: string
 }
 
 export enum QuestionTypeEnum {

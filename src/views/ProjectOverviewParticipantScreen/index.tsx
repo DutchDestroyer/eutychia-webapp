@@ -31,7 +31,7 @@ export default function ProjectOverviewParticipantScreen(){
                 return e
               })
 
-              if(dataForTest.status != 200){
+              if(dataForTest.status !== 200){
                   return;
               }
 
