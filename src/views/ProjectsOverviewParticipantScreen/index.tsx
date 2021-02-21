@@ -22,7 +22,7 @@ export default function ProjectsOverviewScreen(){
                 return e
               })
               
-            if(testsOfProject.status != 200){
+            if(testsOfProject.status !== 200){
                 return;
             }
 

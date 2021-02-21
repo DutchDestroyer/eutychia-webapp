@@ -8,12 +8,12 @@ export function TransformTestToPerformData(genericTest: GenericTest): TestToPerf
         displayAnswers: genericTest.displayAnswers,
         finalRemark: genericTest.finalRemark,
         questions: genericTest.questions.map(q => {
-            return<QuestionOfTest>{
+            return {
                 question: q.question!,
                 questionType: transformEnum(q.questionType!),
                 answers: q.answers!,
                 selectedAnswer: ""
-            }
+            } as QuestionOfTest
         })
     }
 

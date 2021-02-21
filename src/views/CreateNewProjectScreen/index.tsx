@@ -8,12 +8,13 @@ import { getTestsAction } from "../../services/redux/actions/getTests";
 import { AppState } from "../../services/redux/store";
 import { TestForAccount } from "../../services/redux/types/getTests";
 import nl from "../navigationlinks";
+import { ParticipantAdder } from "./participantAdder";
 
 interface IProjectTitle{
     projectTitle: string
   }
 
-interface INewParticipant{
+export interface INewParticipant{
   firstName: string,
   lastName: string,
   emailAddress: string,
@@ -139,44 +140,13 @@ export default function CreateNewProjectScreen(){
                 <div className="error">You must enter the title of the project.</div>)}
               </div>
               <div>
-                <input type="button" value="Add Participant" onClick={addParticipant} />      
-                {
-                  /// I Need to update the participants
-                    participantState.map((participant, index) => {
-                    return (
-                        <div key={`participant-${index}`}>
-                        <label>first name</label>
-                        <input
-                            type="text"
-                            name={participant.firstName}
-                            data-idx={participant.firstName}
-                            id={participant.firstName}
-                            className="firstname"
-                            onChange={(e) => participantFirstNameUpdated(index, e.target.value )}
-                        />
-                        <label>Last name</label>
-                        <input
-                            type="text"
-                            name={participant.lastName}
-                            data-idx={participant.lastName}
-                            id={participant.lastName}
-                            className="lastname"
-                            onChange={(e) => participantLastNameUpdated(index, e.target.value )}
-                        />
-                        <label>email address</label>
-                        <input
-                            type="text"
-                            name={participant.emailAddress}
-                            data-idx={participant.emailAddress}
-                            id={participant.emailAddress}
-                            className="emailAddress"
-                            onChange={(e) => participantEmailAddressUpdated(index, e.target.value )}
-                        />
-                        {participant.isCorrect ? null : <label>Participant is incorrect</label>}                        
-                        </div>
-                    );      
-                    })
-                }
+                <input type="button" value="Add Participant" onClick={addParticipant} /> 
+                <ParticipantAdder
+                  participantState={participantState}
+                  participantFirstNameUpdated={participantFirstNameUpdated}
+                  participantLastNameUpdated={participantLastNameUpdated}
+                  participantEmailAddressUpdated={participantEmailAddressUpdated}
+                />     
               </div>
               <div>
                   {allTests.backendSavedTests.map(test => 
@@ -194,7 +164,6 @@ export default function CreateNewProjectScreen(){
           );
     }
 }
-
 
 function incorrectParticipants(participants: INewParticipant[]): number[] {
   participants.forEach(p =>{
@@ -214,7 +183,7 @@ function completeRowCorrect(p: INewParticipant): Boolean {
   
   let isValidFirstName = p.firstName.trim().length !== 0 && !/[^a-zA-Z]/.test(p.firstName)
   let isValidLastName = p.lastName.trim().length !== 0  && !/[^a-zA-Z]/.test(p.lastName)
-  let isValidEmailAddress = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$").test(p.emailAddress)
+  let isValidEmailAddress = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$").test(p.emailAddress)
   return isValidFirstName && isValidLastName && isValidEmailAddress
 }
 

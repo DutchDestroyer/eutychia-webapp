@@ -34,7 +34,7 @@ export function SetCorrectScreen(props: Props){
     }
 }
 
-export interface QuestionProps{
+interface QuestionProps{
     question: QuestionOfTest
     onRadioButtonChanged: (e: any) => FormEventHandler<HTMLDivElement> | undefined
     onOpenQuestionChanged: (e: ChangeEvent<HTMLInputElement>) => FormEventHandler<HTMLDivElement> | undefined
