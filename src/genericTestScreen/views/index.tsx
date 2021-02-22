@@ -1,8 +1,17 @@
 import { ChangeEvent, FormEventHandler, MouseEventHandler, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { AppState } from "../../services/redux/store";
 import { SetCorrectScreen } from "./viewManager"
+import nl from '../../services/navigationlinks';
+import { api } from "../../App";
+import { createGenericTestAnswers } from "../viewmodels/generateApiTestData";
+import { ButtonToDisplay } from "./buttonToDisplay";
+
+interface ParamTypes {
+    projectUuid: string
+    testUuid: string
+  }
 
 export default function GenericTestScreen(){
     const history = useHistory();
@@ -12,6 +21,7 @@ export default function GenericTestScreen(){
     const [questionNumber, setQuestionNumber] = useState<number>(-1);
     const [isAnswerGiven, setIsAnswerGiven] = useState<boolean>(true);
     const [sliderValue, setSliderValue] = useState<number>(0)
+    const { projectUuid, testUuid } = useParams<ParamTypes>();
 
     if(!loginData.isValid){
         return (
@@ -25,7 +35,8 @@ export default function GenericTestScreen(){
         );
     }
 
-    function nextButtonClicked(): MouseEventHandler<HTMLButtonElement> | undefined {
+    function onNextButtonClicked(): MouseEventHandler<HTMLButtonElement> | undefined {
+        (async () => {
         // Check that a answer has been submitted
         if(questionNumber > -1 && 
             questionNumber < testData.questions.length &&
@@ -34,10 +45,30 @@ export default function GenericTestScreen(){
                 return;
             }
 
-        setIsAnswerGiven(true)
-        setSliderValue(0)
-        setQuestionNumber(questionNumber + 1)
+            setSliderValue(0)
+            setIsAnswerGiven(true)
 
+            if(questionNumber === testData.questions.length - 1) {
+                if(!loginData.isValid) {
+                    return;
+                }
+
+                const genericTestAnswers = createGenericTestAnswers(testData, loginData.accountDetails.accountID)
+                const submittedTestData = await api.submitAnswerToTest(projectUuid, testUuid, genericTestAnswers)
+
+                if(submittedTestData.status !== 200){
+                    return;
+                }
+            }
+            setQuestionNumber(questionNumber + 1)
+            return;
+        })();
+
+        return;
+    }
+
+    function onFinishedButtonClicked(): MouseEventHandler<HTMLButtonElement> | undefined {
+        history.push(nl.projectOverviewParticipantScreen + "/" + projectUuid );
         return;
     }
 
@@ -65,8 +96,14 @@ export default function GenericTestScreen(){
                 onRadioButtonChanged={onRadioButtonChanged}
                 onOpenQuestionChanged={onOpenQuestionChanged}
                 onSliderChanged={onSliderChanged}
-                sliderValue={sliderValue}/>            
-            <button onClick={nextButtonClicked}>Next</button>
+                sliderValue={sliderValue}
+            />            
+            <ButtonToDisplay 
+                questionNumber={questionNumber}
+                numberOfQuestions={testData.questions.length}
+                onFinishedButtonClicked={onFinishedButtonClicked}
+                onNextButtonClicked={onNextButtonClicked}
+            />
         </div>
     );
 }
