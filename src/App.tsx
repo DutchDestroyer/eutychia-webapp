@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-import nl from './views/navigationlinks';
-import LoginScreen from './views/LoginScreen/index';
-import OverviewScreen from './views/OverviewScreen';
-import CreateNewProjectScreen from './views/CreateNewProjectScreen';
-import ModifyExistingProjectScreen from './views/ModifyExistingProjectScreen';
-import ProjectsOverviewScreen from './views/ProjectsOverviewParticipantScreen';
-import ProjectOverviewParticipantScreen from './views/ProjectOverviewParticipantScreen';
-import GenericTestScreen from './views/GenericTestScreen';
+import nl from './services/navigationlinks';
+import LoginScreen from './loginScreen/views/index';
+import OverviewScreen from './overviewScreen/views';
+import CreateNewProjectScreen from './createNewProject/views';
+import ModifyExistingProjectScreen from './modifyExistingProject/views';
+import ProjectsOverviewScreen from './allProjectsOverviewParticipant/view';
+import ProjectOverviewParticipantScreen from './singleProjectOverviewParticipant/views';
+import GenericTestScreen from './genericTestScreen/views';
 import { Configuration, ConfigurationParameters } from './services/api/configuration';
 import { DefaultApi } from './services/api';
 
