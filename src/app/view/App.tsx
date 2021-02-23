@@ -1,20 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-import nl from './services/navigationlinks';
-import LoginScreen from './loginScreen/views/index';
-import OverviewScreen from './overviewScreen/views';
-import CreateNewProjectScreen from './createNewProject/views';
-import ModifyExistingProjectScreen from './modifyExistingProject/views';
-import ProjectsOverviewScreen from './allProjectsOverviewParticipant/view';
-import ProjectOverviewParticipantScreen from './singleProjectOverviewParticipant/views';
-import GenericTestScreen from './genericTestScreen/views';
-import { Configuration, ConfigurationParameters } from './services/api/configuration';
-import { DefaultApi } from './services/api';
+import nl from '../../services/navigationlinks';
+import LoginScreen from '../../loginScreen/views/index';
+import OverviewScreen from '../../overviewScreen/views';
+import CreateNewProjectScreen from '../../createNewProject/views';
+import ModifyExistingProjectScreen from '../../modifyExistingProject/views';
+import ProjectsOverviewScreen from '../../allProjectsOverviewParticipant/view';
+import ProjectOverviewParticipantScreen from '../../singleProjectOverviewParticipant/views';
+import GenericTestScreen from '../../genericTestScreen/views';
+import { useDispatch } from 'react-redux';
+import { apiAction } from '../redux/actions/api';
+import { createApiData } from '../viewmodels/api';
 
 function App(){
 
   const[isUserAuthenticated] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(apiAction(createApiData()))
+  })
 
   return (
     <Router>
@@ -41,15 +47,5 @@ function App(){
     </Router>
   );
 }
-
-
-let configParams: ConfigurationParameters = {
-  username: "Mark",
-  basePath: "http://localhost:8080/api"
-}
-
-let config = new Configuration(configParams)
-
-export const api: DefaultApi = new DefaultApi(config);
 
 export default App;

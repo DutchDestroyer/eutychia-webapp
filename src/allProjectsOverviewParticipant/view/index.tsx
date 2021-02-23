@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { api } from '../../App';
 import { TestsProject } from '../../services/api';
 import { getTestsOfProjectOfParticipantAction } from '../redux/actions/getTestsOfProjectParticipant';
 import { AppState } from '../../services/redux/store';
@@ -12,6 +11,7 @@ export default function ProjectsOverviewScreen(){
     const history = useHistory();
     const loginData = useSelector((state: AppState) => state.login)
     const projectsOfParticipant = useSelector((state: AppState) => state.getProjectsOfParticipant)
+    const api = useSelector((state: AppState) => state.api.api)
 
     const goToProjectClick = (projectUUID: string) =>{
         (async () => {

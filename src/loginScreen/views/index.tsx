@@ -1,17 +1,18 @@
 import { useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { useDispatch } from 'react-redux';
-import { api } from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginAction } from '../redux/actions/login';
 import nl from '../../services/navigationlinks';
 import { transformLoginData } from '../viewmodels/transform';
 import { IState as ILoginState } from '../contracts/iLoginState';
 import { createLoginData } from '../viewmodels/create';
+import { AppState } from '../../services/redux/store';
 
 export default function LoginScreen(): JSX.Element{
   const {register, handleSubmit, errors, reset} = useForm<ILoginState>();
   const history = useHistory();
   const dispatch = useDispatch()
+  const api = useSelector((state: AppState) => state.api.api)
 
   const onSubmit = (data: ILoginState) => {
 

@@ -6,13 +6,15 @@ import selectableTestsForProjectReducer from "../../overviewScreen/redux/reducer
 import getProjectsOfParticipantReducer from "../../overviewScreen/redux/reducers/getProjectsOfParticipant";
 import getTestsOfProjectOfParticipantReducer from "../../allProjectsOverviewParticipant/redux/reducers/getTestsOfProjectParticipant";
 import testToPerformReducer from "../../singleProjectOverviewParticipant/redux/reducers/dataForTestToPerform";
+import apiReducer from "../../app/redux/reducers/api";
 
 const rootReducer = combineReducers({
     login: loginReducer,
     selectableTestsForProject: selectableTestsForProjectReducer,
     getProjectsOfParticipant: getProjectsOfParticipantReducer,
     testsOfProjectOfParticipant: getTestsOfProjectOfParticipantReducer,
-    testToPerform: testToPerformReducer
+    testToPerform: testToPerformReducer,
+    api: apiReducer
   });
 
 export type AppState = ReturnType<typeof rootReducer>;

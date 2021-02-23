@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { api } from '../../App';
 import { GenericTest } from '../../services/api';
 import { testToPerformAction } from '../redux/actions/dataForTestToPerform';
 import { AppState } from '../../services/redux/store';
@@ -18,6 +17,7 @@ export default function ProjectOverviewParticipantScreen(){
     const dispatch = useDispatch();
     const loginData = useSelector((state: AppState) => state.login)
     const testsOfProject = useSelector((state: AppState) => state.testsOfProjectOfParticipant)
+    const api = useSelector((state: AppState) => state.api.api)
 
     const { projectUuid } = useParams<ParamTypes>();
     const goToTestClick = (test: TestOfProjectOfParticipant) => {

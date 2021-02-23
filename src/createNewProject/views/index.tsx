@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { api } from "../../App";
 import { AppState } from "../../services/redux/store";
 import nl from "../../services/navigationlinks";
 import { ParticipantAdder } from "./participantAdder";
@@ -22,7 +21,8 @@ export default function CreateNewProjectScreen(){
     const dispatch = useDispatch()
     const {register, handleSubmit, errors, reset} = useForm<IProjectTitle>();
     const [hasTestsSeleted, setTestsSelected] = useState<Boolean>(true);
-    
+    const api = useSelector((state: AppState) => state.api.api)
+
     const blankParticipant: INewParticipant = {
         firstName: '',
         lastName: '',

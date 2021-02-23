@@ -4,7 +4,6 @@ import { useHistory, useParams } from "react-router-dom";
 import { AppState } from "../../services/redux/store";
 import { SetCorrectScreen } from "./viewManager"
 import nl from '../../services/navigationlinks';
-import { api } from "../../App";
 import { createGenericTestAnswers } from "../viewmodels/generateApiTestData";
 import { ButtonToDisplay } from "./buttonToDisplay";
 
@@ -22,6 +21,7 @@ export default function GenericTestScreen(){
     const [isAnswerGiven, setIsAnswerGiven] = useState<boolean>(true);
     const [sliderValue, setSliderValue] = useState<number>(0)
     const { projectUuid, testUuid } = useParams<ParamTypes>();
+    const api = useSelector((state: AppState) => state.api.api)
 
     if(!loginData.isValid){
         return (
