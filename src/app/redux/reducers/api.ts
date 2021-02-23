@@ -1,4 +1,3 @@
-import { applyMiddleware } from "redux";
 import { DefaultApi } from "../../../services/api";
 import { API, APIData, apiAction } from "../types/api";
 
