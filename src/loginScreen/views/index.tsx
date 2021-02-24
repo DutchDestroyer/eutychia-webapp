@@ -5,8 +5,10 @@ import { loginAction } from '../redux/actions/login';
 import nl from '../../services/navigationlinks';
 import { transformLoginData } from '../viewmodels/transform';
 import { IState as ILoginState } from '../contracts/iLoginState';
-import { createLoginData } from '../viewmodels/create';
+import { createLoginData } from '../viewmodels/createLoginData';
 import { AppState } from '../../services/redux/store';
+import { apiAction } from '../../app/redux/actions/api';
+import { createApiData } from '../viewmodels/createApiData';
 
 export default function LoginScreen(): JSX.Element{
   const {register, handleSubmit, errors, reset} = useForm<ILoginState>();
@@ -32,6 +34,9 @@ export default function LoginScreen(): JSX.Element{
 
       dispatch(
         loginAction(transformLoginData(loggedInData.data, loggedInData.status))
+      );
+      dispatch(
+        apiAction(createApiData(loggedInData.data))
       );
 
       history.push(nl.overviewScreen);      
@@ -68,4 +73,4 @@ export default function LoginScreen(): JSX.Element{
     </form>
   );
 }
-  
+ 
