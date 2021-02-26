@@ -63,6 +63,12 @@ export interface AccountDetails {
      */
     accountID: string;
     /**
+     * logged in SessionID
+     * @type {string}
+     * @memberof AccountDetails
+     */
+    sessionID: string;
+    /**
      * The access token.
      * @type {string}
      * @memberof AccountDetails
@@ -296,11 +302,23 @@ export interface LoginAccount {
      */
     password?: string;
     /**
-     * accesstoken of the account to log in with
+     * refreshToken of the account to log in with
      * @type {string}
      * @memberof LoginAccount
      */
-    accessToken?: string;
+    refreshToken?: string;
+    /**
+     * session of account wrl the refreshToken
+     * @type {string}
+     * @memberof LoginAccount
+     */
+    sessionID?: string;
+    /**
+     * id of the account
+     * @type {string}
+     * @memberof LoginAccount
+     */
+    accountID?: string;
 }
 
 /**
@@ -309,7 +327,7 @@ export interface LoginAccount {
     */
 export enum LoginAccountGrantTypeEnum {
     Password = 'password',
-    AutenthicationToken = 'autenthicationToken'
+    RefreshToken = 'refreshToken'
 }
 
 /**

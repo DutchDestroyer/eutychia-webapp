@@ -6,7 +6,8 @@ const initialState: LoggedInData = {
         accountID: "",
         refreshToken: "",
         accessToken: "",
-        accountType: AccountDetailsAccountTypeEnum.Participant
+        accountType: AccountDetailsAccountTypeEnum.Participant,
+        sessionID: ""
     },
     isValid: false
 } 
