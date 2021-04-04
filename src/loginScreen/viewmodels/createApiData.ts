@@ -5,7 +5,7 @@ export function createApiData(accountData: AccountDetails): APIData {
     const configParams: ConfigurationParameters = {
         username: "Mark",
         basePath: "http://localhost:8080/api",
-        //accessToken: accountData.accessToken
+        accessToken: accountData.accessToken
     }
         
     const config = new Configuration(configParams)
