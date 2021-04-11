@@ -20,35 +20,35 @@ import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
- * the schema to create the new account
+ * 
  * @export
- * @interface AccountCreation
+ * @interface AccountCreationFinalize
  */
-export interface AccountCreation {
+export interface AccountCreationFinalize {
     /**
-     * first name of the new user
+     * email address of the participant
      * @type {string}
-     * @memberof AccountCreation
+     * @memberof AccountCreationFinalize
+     */
+    emailAddress: string;
+    /**
+     * first name of the user
+     * @type {string}
+     * @memberof AccountCreationFinalize
      */
     firstName: string;
     /**
-     * last name of the new user
+     * last name of the user
      * @type {string}
-     * @memberof AccountCreation
+     * @memberof AccountCreationFinalize
      */
     lastName: string;
     /**
-     * the id of the account that invited the new user
+     * password of the user
      * @type {string}
-     * @memberof AccountCreation
+     * @memberof AccountCreationFinalize
      */
-    senderAccountID: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AccountCreation
-     */
-    emailAddress: string;
+    password: string;
 }
 /**
  * the account details provided when the user logs in as a JWT token
@@ -271,11 +271,11 @@ export interface GetAccountIdResponse {
  */
 export interface JWTAccountDetails {
     /**
-     * The jwt token with all information.
+     * The new access token
      * @type {string}
      * @memberof JWTAccountDetails
      */
-    JWT: string;
+    accessToken: string;
 }
 /**
  * 
@@ -342,6 +342,18 @@ export interface LogoutAccount {
      * @memberof LogoutAccount
      */
     accessToken: string;
+    /**
+     * The account ID.
+     * @type {string}
+     * @memberof LogoutAccount
+     */
+    accountID: string;
+    /**
+     * The id of the session, related to the refresh token
+     * @type {string}
+     * @memberof LogoutAccount
+     */
+    sessionID: string;
 }
 /**
  * participant of project
@@ -413,30 +425,17 @@ export interface RefreshDetails {
      */
     accountID: string;
     /**
+     * The id of the session, related to the refresh token
+     * @type {string}
+     * @memberof RefreshDetails
+     */
+    sessionID: string;
+    /**
      * the refreshToken used to update the acces token
      * @type {string}
      * @memberof RefreshDetails
      */
     refreshToken: string;
-}
-/**
- * schema for signing up
- * @export
- * @interface SignUp
- */
-export interface SignUp {
-    /**
-     * account id of the account that invites the new user
-     * @type {string}
-     * @memberof SignUp
-     */
-    senderAccountID: string;
-    /**
-     * the email address of the newly invited person
-     * @type {string}
-     * @memberof SignUp
-     */
-    emailAddress: string;
 }
 /**
  * test to perform
@@ -513,65 +512,6 @@ export interface TestsProject {
  */
 export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * Creates a new account
-         * @param {AccountCreation} accountCreation 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createNewAccount: async (accountCreation: AccountCreation, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'accountCreation' is not null or undefined
-            if (accountCreation === null || accountCreation === undefined) {
-                throw new RequiredError('accountCreation','Required parameter accountCreation was null or undefined when calling createNewAccount.');
-            }
-            const localVarPath = `/signup/create`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof accountCreation !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(accountCreation !== undefined ? accountCreation : {})
-                : (accountCreation || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
         /**
          * Creates a new project
          * @param {string} accountID The ID of the account
@@ -673,6 +613,62 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * finalize the account creation when user is added, this happens when email is senderAccountID
+         * @param {string} accountID The ID of the account
+         * @param {AccountCreationFinalize} accountCreationFinalize 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        finalizeAccountCreation: async (accountID: string, accountCreationFinalize: AccountCreationFinalize, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accountID' is not null or undefined
+            if (accountID === null || accountID === undefined) {
+                throw new RequiredError('accountID','Required parameter accountID was null or undefined when calling finalizeAccountCreation.');
+            }
+            // verify required parameter 'accountCreationFinalize' is not null or undefined
+            if (accountCreationFinalize === null || accountCreationFinalize === undefined) {
+                throw new RequiredError('accountCreationFinalize','Required parameter accountCreationFinalize was null or undefined when calling finalizeAccountCreation.');
+            }
+            const localVarPath = `/accounts/{accountID}/finalize`
+                .replace(`{${"accountID"}}`, encodeURIComponent(String(accountID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof accountCreationFinalize !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(accountCreationFinalize !== undefined ? accountCreationFinalize : {})
+                : (accountCreationFinalize || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -1106,65 +1102,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Sends an email address that needs to be signed up
-         * @param {SignUp} signUp 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        sendEmailForSignUp: async (signUp: SignUp, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'signUp' is not null or undefined
-            if (signUp === null || signUp === undefined) {
-                throw new RequiredError('signUp','Required parameter signUp was null or undefined when calling sendEmailForSignUp.');
-            }
-            const localVarPath = `/signup`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof signUp !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(signUp !== undefined ? signUp : {})
-                : (signUp || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Submit the answer to the specific
          * @param {string} projectID The ID of the project to return
          * @param {string} testID The ID of the test to return (UUID)
@@ -1245,19 +1182,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 export const DefaultApiFp = function(configuration?: Configuration) {
     return {
         /**
-         * Creates a new account
-         * @param {AccountCreation} accountCreation 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createNewAccount(accountCreation: AccountCreation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).createNewAccount(accountCreation, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
          * Creates a new project
          * @param {string} accountID The ID of the account
          * @param {CreateProject} createProject 
@@ -1279,6 +1203,20 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          */
         async deleteAccountByID(accountID: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).deleteAccountByID(accountID, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * finalize the account creation when user is added, this happens when email is senderAccountID
+         * @param {string} accountID The ID of the account
+         * @param {AccountCreationFinalize} accountCreationFinalize 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async finalizeAccountCreation(accountID: string, accountCreationFinalize: AccountCreationFinalize, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).finalizeAccountCreation(accountID, accountCreationFinalize, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1391,19 +1329,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Sends an email address that needs to be signed up
-         * @param {SignUp} signUp 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async sendEmailForSignUp(signUp: SignUp, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).sendEmailForSignUp(signUp, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
          * Submit the answer to the specific
          * @param {string} projectID The ID of the project to return
          * @param {string} testID The ID of the test to return (UUID)
@@ -1428,15 +1353,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
 export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
-         * Creates a new account
-         * @param {AccountCreation} accountCreation 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createNewAccount(accountCreation: AccountCreation, options?: any): AxiosPromise<void> {
-            return DefaultApiFp(configuration).createNewAccount(accountCreation, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Creates a new project
          * @param {string} accountID The ID of the account
          * @param {CreateProject} createProject 
@@ -1454,6 +1370,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         deleteAccountByID(accountID: string, options?: any): AxiosPromise<void> {
             return DefaultApiFp(configuration).deleteAccountByID(accountID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * finalize the account creation when user is added, this happens when email is senderAccountID
+         * @param {string} accountID The ID of the account
+         * @param {AccountCreationFinalize} accountCreationFinalize 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        finalizeAccountCreation(accountID: string, accountCreationFinalize: AccountCreationFinalize, options?: any): AxiosPromise<void> {
+            return DefaultApiFp(configuration).finalizeAccountCreation(accountID, accountCreationFinalize, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns an account by ID
@@ -1530,15 +1456,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return DefaultApiFp(configuration).refreshAccessToken(refreshDetails, options).then((request) => request(axios, basePath));
         },
         /**
-         * Sends an email address that needs to be signed up
-         * @param {SignUp} signUp 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        sendEmailForSignUp(signUp: SignUp, options?: any): AxiosPromise<void> {
-            return DefaultApiFp(configuration).sendEmailForSignUp(signUp, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Submit the answer to the specific
          * @param {string} projectID The ID of the project to return
          * @param {string} testID The ID of the test to return (UUID)
@@ -1560,17 +1477,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
  */
 export class DefaultApi extends BaseAPI {
     /**
-     * Creates a new account
-     * @param {AccountCreation} accountCreation 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public createNewAccount(accountCreation: AccountCreation, options?: any) {
-        return DefaultApiFp(this.configuration).createNewAccount(accountCreation, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * Creates a new project
      * @param {string} accountID The ID of the account
      * @param {CreateProject} createProject 
@@ -1591,6 +1497,18 @@ export class DefaultApi extends BaseAPI {
      */
     public deleteAccountByID(accountID: string, options?: any) {
         return DefaultApiFp(this.configuration).deleteAccountByID(accountID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * finalize the account creation when user is added, this happens when email is senderAccountID
+     * @param {string} accountID The ID of the account
+     * @param {AccountCreationFinalize} accountCreationFinalize 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public finalizeAccountCreation(accountID: string, accountCreationFinalize: AccountCreationFinalize, options?: any) {
+        return DefaultApiFp(this.configuration).finalizeAccountCreation(accountID, accountCreationFinalize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1681,17 +1599,6 @@ export class DefaultApi extends BaseAPI {
      */
     public refreshAccessToken(refreshDetails: RefreshDetails, options?: any) {
         return DefaultApiFp(this.configuration).refreshAccessToken(refreshDetails, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Sends an email address that needs to be signed up
-     * @param {SignUp} signUp 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public sendEmailForSignUp(signUp: SignUp, options?: any) {
-        return DefaultApiFp(this.configuration).sendEmailForSignUp(signUp, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
